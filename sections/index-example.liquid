@@ -1,0 +1,63 @@
+<section class="hero">
+    {% if section.settings.video_url == blank %}
+      <img src="{{ section.settings.image | img_url: 'master' }}" alt="">
+    {% else %}
+      <video controls="false" autoplay="true" muted="true" loop>
+        <source src="{{ section.settings.video_url }}" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    {% endif %}
+    <div class="caption">
+        <h1>{{ section.settings.title }}</h1>
+        <h3>{{ section.settings.text }}</h3>
+        <a href="{{section.settings.btn_link}}" class="btn btn-trn">{{ section.settings.btn_text }}</a>
+    </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Hero",
+    "settings": [
+      {
+        "id": "image",
+        "type": "image_picker",
+        "label": "Background image"
+      },
+      {
+        "id": "video_url",
+        "type": "text",
+        "label": "Video Url",
+        "info": "Use direct file url"
+      },
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title",
+        "default": "A new dimension of Lorem dolor sidam ursani"
+      },
+      {
+        "id": "text",
+        "type": "text",
+        "label": "Title",
+        "default": "Refined details and minimal structure are secret of dolor sidkermas a ment nomentcat."
+      },
+      {
+        "id": "btn_link",
+        "type": "url",
+        "label": "Button Link"
+      },
+      {
+        "id": "btn_text",
+        "type": "text",
+        "label": "Button Text",
+        "default": "Discover Why It Is Unique"
+      }
+    ],
+    "presets": [
+      {
+        "category": "Home Page",
+        "name": "Hero"
+      }
+    ]
+  }
+{% endschema %}

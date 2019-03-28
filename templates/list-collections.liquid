@@ -1,0 +1,23 @@
+<div class="container">
+    <section>
+        <div id="collections-listing">
+          {% paginate collections by 10 %}
+      
+            {% if collections.size > 0 %}
+      
+            <h1>Collections</h1>
+      
+              {% for collection in collections %}
+                <a href="{{ collection.url }}">{{ collection.title | escape }}</a>
+                <small class="hint">({{collection.products_count}} {{ collection.products_count | pluralize: 'product', 'products' }})</small>
+              {% endfor %}
+      
+            <div id="pagination">{{ paginate | default_pagination }}</div>
+      
+            {% else %}
+              <p>No Collections found...</p>
+            {% endif %}
+          {% endpaginate %}
+        </div>
+      </section>
+</div>

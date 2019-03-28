@@ -1,0 +1,22 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Theme template",
+    "theme_version": "1.0.0",
+    "theme_author": "Alex O",
+    "theme_documentation_url": "https:\/\/weberous.com",
+    "theme_support_url": "https:\/\/weberous.com",
+    "theme_packaged_with": "@shopify\/slate-tools@1.0.0-beta.14"
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "id": "favicon",
+        "type": "image_picker",
+        "label": "Favicon",
+        "info": "Use PNG image to add Favicon"
+      }
+    ]
+  }
+]

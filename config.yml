@@ -1,0 +1,8 @@
+development:
+  password: qwerqwerqwerqwerqwerqwer
+  theme_id: "00000000000"
+  store: shop.myshopify.com
+production:
+  password: qwerqwerqwerqwerqwerqwer
+  theme_id: "11111111111"
+  store: shop.myshopify.com

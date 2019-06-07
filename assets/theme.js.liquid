@@ -1,0 +1,161 @@
+
+window.theme = window.theme || {};
+
+theme.cart = (function(){
+  let sidebar = new Slideout({
+   'panel': document.getElementById('content'),
+   'menu': document.getElementById('ajax-cart'),
+   'padding': 300,
+   'tolerance': 70,
+   'easing': 'ease',
+   'side': 'right'
+  })
+  function reloadCart(){
+    $('#ajax-cart .cart-body .ajax-container').load('/cart?view=ajax', function(){
+        $('.cart-body .ajax-container .fade-me-in').fadeIn()
+        bindCartEvents()
+        let jsonCart = JSON.parse($('#cartJSON').text())
+        $('#cart-items-count').text(jsonCart.item_count)
+      })
+  }
+  function addToCart(variant, quantity){
+    $.ajax({
+      url: '/cart/add.js', 
+      type: 'POST',
+      data: JSON.stringify({ quantity: quantity, id: variant }),
+      dataType : "json",
+      contentType: "application/json",
+      success: function(){
+          $('#ajax-cart .cart-body .ajax-container').fadeOut().html(`
+          <div class="loader">
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+          </div>`).fadeIn()
+          cart.open()
+          nativeToast({
+            message: 'Succesfully added',
+            timeout: 5000,
+            rounded: true,
+            position: 'south',
+            closeOnClick: true,
+            type: 'success'
+          })
+      },
+      error: function(e){
+        let error = JSON.parse(e.responseText)
+        if (error.status == 422){
+          nativeToast({
+            message: 'No more items available!',
+            timeout: 5000,
+            rounded: true,
+            position: 'south',
+            closeOnClick: true,
+            type: 'error'
+          })
+        }
+      }
+    })
+  }
+  function updateQuantity(quantity, key){
+    $.ajax({
+      url: '/cart/change.js', 
+      type: 'POST',
+      data: JSON.stringify({ quantity: quantity, id: key }),
+      dataType : "json",
+      contentType: "application/json",
+      success: function(data){
+        if (quantity > 0){
+          let item_quantity = data.items.filter(i=>i.key == key)[0].quantity
+          if (quantity != item_quantity) {
+            nativeToast({
+              message: 'No more items available!',
+              timeout: 5000,
+              rounded: true,
+              position: 'south',
+              closeOnClick: true,
+              type: 'error'
+            })
+            $(`[data-key="${key}"]`).val(item_quantity)
+          } else {
+            nativeToast({
+              message: 'Quanity changed',
+              timeout: 5000,
+              rounded: true,
+              position: 'south',
+              closeOnClick: true,
+              type: 'success'
+            })
+            reloadCart()
+          }
+        } else {
+          nativeToast({
+            message: 'Item Removed',
+            timeout: 5000,
+            rounded: true,
+            position: 'south',
+            closeOnClick: true,
+            type: 'success'
+          })
+          reloadCart()
+        }
+      },
+      error: function(e){
+        let error = JSON.parse(e.responseText)
+        if (error.status == 422){
+          nativeToast({
+            message: 'No more items available!',
+            timeout: 5000,
+            rounded: true,
+            position: 'south',
+            closeOnClick: true,
+            type: 'error'
+          })
+        }
+      }
+    })
+  }
+
+  function bindCartEvents(){
+    $('.quantity_group span.plus').click(function () {
+      if ($(this).prev().val() < $(this).prev().attr('max')) $(this).prev().val(+$(this).prev().val() + 1).change()
+    })
+  
+    $('.quantity_group span.minus').click(function () {
+          if ($(this).next().val() > 0) $(this).next().val(+$(this).next().val() - 1).change()
+    })
+    $('#ajax-cart .cart-body .ajax-container input.quantity').change(function(){
+       updateQuantity(Number($(this).val()), $(this).data('key'))
+    })
+  }
+  function init(){
+    $('a[href="#cart"]').click(function(e){
+        e.preventDefault()
+        sidebar.toggle()
+    })
+    $('#dismiss').click(function(e){
+        e.preventDefault()
+        sidebar.close()
+    })
+    sidebar.on('beforeopen', function(){
+        $('#ajax-cart .cart-body .ajax-container').html(`<div class="loader"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>`)
+    })
+    sidebar.on('open', function() {
+        reloadCart()
+    })
+    bindCartEvents()
+    if (window.location.href.indexOf('oc=true') > 0){
+        sidebar.open()
+    }
+  }
+  return {
+    sidebar: sidebar,
+    addToCart: addToCart,
+    reloadCart: reloadCart,
+    init: init
+  }
+})($)
+
+theme.init = (function(){
+  theme.cart.init()
+})($)
+
+theme.init()

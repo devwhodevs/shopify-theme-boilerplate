@@ -7,10 +7,13 @@
   <meta name="theme-color" content="">
   <link rel="canonical" href="{{ canonical_url }}">
   <link rel="icon" type="image/png" href="{{settings.favicon | img_url: '32x'}}" />
+  <title>
+    {{ page_title }}{% if current_page != 1 %} &ndash; Page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+  </title>
 
-  <title>{{ shop.name }}</title>
-
-  <meta name="description" content="">
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}" />
+  {% endif %}
   
   {% include 'style-tags' %}
   {% include 'script-tags' %}
@@ -18,10 +21,10 @@
   {{ content_for_header }}
   
 </head>
-<body class="{{template}}">
-
+<body class="{{template.suffix}}">
+    <div id="content">
       <header>
-          {% section 'header' %}
+          {%- section 'header' -%}
       </header>
 
       <main>
@@ -29,16 +32,21 @@
       </main>
 
       <footer>
-        {% section 'footer' %}
+        {%- section 'footer' -%}
       </footer>
-      
-    <div id="ajax-cart">
-      <div class="cart-body">
-        <div class="loader">
-          <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-        </div>
-      </div>
     </div>
-
+    <div id="ajax-cart">
+        <div class="cart-body">
+          <header>
+              <h1>Shopping Cart</h1>
+              <button id="dismiss">&times;</button>
+          </header>
+          <div class="ajax-container">
+            <div class="loader">
+              <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+            </div>
+          </div>
+        </div>
+    </div>
 </body>
 </html>

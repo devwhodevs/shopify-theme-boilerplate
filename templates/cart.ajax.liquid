@@ -1,0 +1,53 @@
+{% layout none %}
+<section class="fade-me-in">
+    {% comment %} <header>
+        <h1>My Cart</h1>
+        <button id="dismiss">&times;</button>
+    </header> {% endcomment %}
+    <main>
+        <div class="items">
+            {% if cart.item_count > 0 %}
+                {% for item in cart.items %}
+                    <div class="item">
+                        <a class="item_image" href="{{item.url}}">
+                            <img src="{{item.image | img_url: '200x'}}" alt="">
+                        </a>
+                        <div>
+                            <a href="{{item.url}}">{{item.title}}</a>
+                            <div class="d-flex justify-content-between">
+                                <div class="quantity_group">
+                                    <span class="minus">−</span>
+                                    <input class="quantity" min="0" max="99999" step="1" data-key="{{item.key}}" type="number" value="{{item.quantity}}">
+                                    <span class="plus">+</span>
+                                </div>
+                                <p>{{item.price | money }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+            <p>Your cart is currently empty.</p>
+            {% endif %}
+        </div>
+    </main>
+
+{% if cart.item_count > 0 %}
+    <footer>
+        <div class="summary">
+            <p><b>Subtotal:</b></p>
+            <p class="price"><b>{{ cart.total_price | money }}</b></p>
+        </div>
+        <div class="shipping text-center">
+            <p>Shipping & taxes calculated at checkout</p>
+        </div>
+        <a href="/checkout" class="btn btn-solid">
+          Check Out →
+        </a>
+
+        <div class="additional_checkout_buttons">{{ content_for_additional_checkout_buttons }}</div>
+    </footer>
+{% endif %}
+</section>
+<script id="cartJSON" type="application/json">
+{{ cart | json }}
+</script>

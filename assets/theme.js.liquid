@@ -18,6 +18,44 @@ theme.cart = (function(){
         $('#cart-items-count').text(jsonCart.item_count)
       })
   }
+  function addToCart_form($form){
+    $.ajax({
+      url: '/cart/add.js', 
+      type: 'POST',
+      data: $form.serialize(),
+      dataType : "json",
+      contentType: "application/x-www-form-urlencoded",
+      success: function(){
+          $('#ajax-cart .cart-body .ajax-container').fadeOut().html(`
+          <div class="loader">
+            <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+          </div>`).fadeIn()
+          sidebar.open()
+          nativeToast({
+            message: 'Succesfully added',
+            timeout: 5000,
+            rounded: true,
+            position: 'south',
+            closeOnClick: true,
+            type: 'success'
+          })
+      },
+      error: function(e){
+        console.log(e)
+        let error = JSON.parse(e.responseText)
+        if (error.status == 422){
+          nativeToast({
+            message: 'No more items available!',
+            timeout: 5000,
+            rounded: true,
+            position: 'south',
+            closeOnClick: true,
+            type: 'error'
+          })
+        }
+      }
+    })
+  }
   function addToCart(variant, quantity){
     $.ajax({
       url: '/cart/add.js', 
@@ -149,6 +187,7 @@ theme.cart = (function(){
   return {
     sidebar: sidebar,
     addToCart: addToCart,
+    addToCart_form: addToCart_form,
     reloadCart: reloadCart,
     init: init
   }
@@ -157,5 +196,6 @@ theme.cart = (function(){
 theme.init = function(){
   theme.cart.init()
 }
-
-theme.init()
+$(function(){
+  theme.init($)
+})

@@ -22,31 +22,16 @@
   
 </head>
 <body class="{{template.suffix}}">
-    <div id="content">
-      <header>
-          {%- section 'header' -%}
-      </header>
+    <header>
+        {%- section 'header' -%}
+    </header>
 
-      <main>
-        {{ content_for_layout }}
-      </main>
+    <main>
+      {{ content_for_layout }}
+    </main>
 
-      <footer>
-        {%- section 'footer' -%}
-      </footer>
-    </div>
-    <div id="ajax-cart">
-        <div class="cart-body">
-          <header>
-              <h1>Shopping Cart</h1>
-              <button id="dismiss">&times;</button>
-          </header>
-          <div class="ajax-container">
-            <div class="loader">
-              <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-            </div>
-          </div>
-        </div>
-    </div>
+    <footer>
+      {%- section 'footer' -%}
+    </footer>
 </body>
 </html>
